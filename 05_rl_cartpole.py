@@ -8,6 +8,7 @@ Environment:     CartPole-v1 (OpenAI Gymnasium)
 Training: 500 Episoden, MSE-Loss, Adam-Optimizer
 Evaluation: Gleitender Durchschnitt der letzten 100 Episoden
 Visualisierung: Reward-Kurve, Epsilon-Decay, Beispiel-Trajektorie
+W&B Tracking:  Experiment-Tracking mit Weights & Biases
 """
 
 import torch
@@ -17,7 +18,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
 import random
+import os
 from pathlib import Path
+
+# ── W&B (optional) ──────────────────────────────────────────────────────────
+try:
+    import wandb
+    WANDB_AVAILABLE = True
+except ImportError:
+    WANDB_AVAILABLE = False
 
 # ── Reproduzierbarkeit ──────────────────────────────────────────────────────
 torch.manual_seed(42)
@@ -27,6 +36,29 @@ random.seed(42)
 # ── Gerät ───────────────────────────────────────────────────────────────────
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Verwende Gerät: {DEVICE}")
+
+# ── W&B Initialisierung ─────────────────────────────────────────────────────
+if WANDB_AVAILABLE:
+    mode = "online" if os.environ.get("WANDB_API_KEY") else "offline"
+    wandb.init(
+        project="pytorch-learning",
+        name="dqn-cartpole",
+        config={
+            "algorithm": "DQN",
+            "env": "CartPole-v1",
+            "episodes": 500,
+            "batch_size": 64,
+            "gamma": 0.99,
+            "lr": 0.001,
+            "target_update": 10,
+            "memory_size": 10000,
+        },
+        mode=mode,
+        tags=["dqn", "cartpole", "pytorch"]
+    )
+    print(f"📊 W&B initialisiert (mode={mode})")
+else:
+    print("⚠️  W&B nicht installiert — überspringe Tracking")
 
 # ── Hyperparameter ──────────────────────────────────────────────────────────
 EPISODES = 500
@@ -211,6 +243,16 @@ for episode in range(1, EPISODES + 1):
         print(f"Episode {episode:4d}/{EPISODES} | Reward: {episode_reward:6.1f} | "
               f"Avg100: {ma:6.1f} | Epsilon: {agent.epsilon:.3f} | Loss: {avg_loss:.4f}")
 
+    # ── W&B Logging ──────────────────────────────────────────
+    if WANDB_AVAILABLE and episode % 10 == 0:
+        wandb.log({
+            "episode": episode,
+            "reward": episode_reward,
+            "avg_reward_100": ma,
+            "epsilon": agent.epsilon,
+            "loss": avg_loss,
+        })
+
 env.close()
 
 print(f"\nFinaler Avg100-Reward: {moving_avg[-1]:.2f}")
@@ -299,3 +341,7 @@ plt.show()
 
 print(f"\nPlots gespeichert unter: {output_dir}/")
 print("05_rl_cartpole.py – Fertig!")
+
+# ── W&B Cleanup ─────────────────────────────────────────────────────────────
+if WANDB_AVAILABLE:
+    wandb.finish()
