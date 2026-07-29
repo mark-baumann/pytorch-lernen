@@ -1,0 +1,18 @@
+# Data files (downloaded datasets)
+data/
+
+# Output files (plots, models)
+output/
+
+# W&B logs
+wandb/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db

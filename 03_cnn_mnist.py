@@ -185,11 +185,7 @@ with torch.no_grad():
     outputs = model(images)
     _, preds = outputs.max(1)
 
-for i in range(10):
-    ax = axes[2] if i == 0 else axes[2]  # hack: show first 10 in subplot grid
-    # We'll use a separate figure for predictions
-
-# Besser: eigenes Figure für Predictions
+# Eigenes Figure für Predictions
 fig2, axes2 = plt.subplots(2, 5, figsize=(12, 5))
 axes2 = axes2.flatten()
 for i in range(10):
