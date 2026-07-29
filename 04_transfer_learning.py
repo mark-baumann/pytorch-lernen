@@ -29,9 +29,9 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Verwende Gerät: {DEVICE}")
 
 # ── Hyperparameter ──────────────────────────────────────────────────────────
-BATCH_SIZE = 64
-HEAD_EPOCHS = 5       # Nur den neuen Kopf trainieren
-FINETUNE_EPOCHS = 5   # Alle Layer feintunen
+BATCH_SIZE = 32
+HEAD_EPOCHS = 2       # Nur den neuen Kopf trainieren
+FINETUNE_EPOCHS = 2   # Alle Layer feintunen
 LEARNING_RATE_HEAD = 0.001
 LEARNING_RATE_FINETUNE = 0.0001
 
@@ -43,8 +43,9 @@ CIFAR10_CLASSES = [
 
 # ── Datenvorbereitung ───────────────────────────────────────────────────────
 # ResNet18 erwartet 224×224 Input – CIFAR-10 ist 32×32, also hochskalieren
+# Für CPU-Training nutzen wir 128×128 als Kompromiss
 train_transform = transforms.Compose([
-    transforms.Resize(224),
+    transforms.Resize(128),
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(10),
     transforms.ToTensor(),
@@ -53,7 +54,7 @@ train_transform = transforms.Compose([
 ])
 
 test_transform = transforms.Compose([
-    transforms.Resize(224),
+    transforms.Resize(128),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406],
                          std=[0.229, 0.224, 0.225])
@@ -66,10 +67,17 @@ test_dataset = datasets.CIFAR10(
     root="./data", train=False, download=True, transform=test_transform
 )
 
+# Für CPU-Training: Subset verwenden (5000 Train, 1000 Test)
+from torch.utils.data import Subset
+train_indices = list(range(5000))
+test_indices = list(range(1000))
+train_dataset = Subset(train_dataset, train_indices)
+test_dataset = Subset(test_dataset, test_indices)
+
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True,
-                          num_workers=2)
+                          num_workers=0)
 test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False,
-                         num_workers=2)
+                         num_workers=0)
 
 print(f"Trainingsdaten: {len(train_dataset)} Bilder")
 print(f"Testdaten:      {len(test_dataset)} Bilder")

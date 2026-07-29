@@ -304,21 +304,21 @@ fig.tight_layout()
 
 # ── Beispiel-Trajektorie (Evaluation) ────────────────────────────────────────
 print("\n── Evaluation: Beispiel-Trajektorie ──")
-eval_env = gym.make("CartPole-v1", render_mode="rgb_array")
+eval_env = gym.make("CartPole-v1")
 state, _ = eval_env.reset()
-frames: list[np.ndarray] = []
 total_reward = 0.0
+step_count = 0
 
 for step in range(500):
-    frames.append(eval_env.render())
     action = agent.select_action(state, evaluate=True)
-    state, reward, terminated, truncated, _ = env.step(action)
+    state, reward, terminated, truncated, _ = eval_env.step(action)
     total_reward += reward
+    step_count += 1
     if terminated or truncated:
         break
 
 eval_env.close()
-print(f"Evaluations-Reward: {total_reward:.1f} in {len(frames)} Schritten")
+print(f"Evaluations-Reward: {total_reward:.1f} in {step_count} Schritten")
 
 # Zeige 4 Frames der Trajektorie
 fig3, axes3 = plt.subplots(1, 4, figsize=(16, 4))
