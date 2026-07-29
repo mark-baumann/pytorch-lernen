@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 from collections import deque
 import random
 import os
+import sys
 from pathlib import Path
 
 # ── W&B (optional) ──────────────────────────────────────────────────────────
@@ -27,6 +28,14 @@ try:
     WANDB_AVAILABLE = True
 except ImportError:
     WANDB_AVAILABLE = False
+
+# ── OpenPipe (optional) ─────────────────────────────────────────────────────
+try:
+    from openpipe import OpenAI as OpenPipeClient
+    OPENPIPE_AVAILABLE = True
+except ImportError:
+    OPENPIPE_AVAILABLE = False
+    OpenPipeClient = None
 
 # ── Reproduzierbarkeit ──────────────────────────────────────────────────────
 torch.manual_seed(42)
@@ -59,6 +68,16 @@ if WANDB_AVAILABLE:
     print(f"📊 W&B initialisiert (mode={mode})")
 else:
     print("⚠️  W&B nicht installiert — überspringe Tracking")
+
+# ── OpenPipe Logger ──────────────────────────────────────────────────────────
+op_logger = None
+if OPENPIPE_AVAILABLE:
+    sys.path.insert(0, "/opt/data/agent-reinforcement-learning")
+    from rl_agent import OpenPipeLogger
+    op_logger = OpenPipeLogger()
+    print("🔧 OpenPipe Logger initialisiert")
+else:
+    print("⚠️  OpenPipe nicht installiert — überspringe Tracking")
 
 # ── Hyperparameter ──────────────────────────────────────────────────────────
 EPISODES = 500
@@ -253,6 +272,16 @@ for episode in range(1, EPISODES + 1):
             "loss": avg_loss,
         })
 
+    # ── OpenPipe Logging ─────────────────────────────────────
+    if OPENPIPE_AVAILABLE and episode % 50 == 0:
+        op_logger.log_episode({
+            "episode": episode,
+            "algorithm": "dqn-cartpole",
+            "reward": episode_reward,
+            "avg_reward_100": ma,
+            "epsilon": agent.epsilon,
+        })
+
 env.close()
 
 print(f"\nFinaler Avg100-Reward: {moving_avg[-1]:.2f}")
@@ -343,6 +372,10 @@ plt.show()
 
 print(f"\nPlots gespeichert unter: {output_dir}/")
 print("05_rl_cartpole.py – Fertig!")
+
+# ── OpenPipe Export ──────────────────────────────────────────────────────────
+if op_logger and len(op_logger.get_training_data()) > 0:
+    op_logger.export_jsonl("output/05_cartpole_training_data.jsonl")
 
 # ── W&B Cleanup ─────────────────────────────────────────────────────────────
 if WANDB_AVAILABLE:

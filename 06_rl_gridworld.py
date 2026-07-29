@@ -31,6 +31,14 @@ try:
 except ImportError:
     WANDB_AVAILABLE = False
 
+# ── OpenPipe (optional) ──────────────────────────────────────────────
+try:
+    from openpipe import OpenAI as OpenPipeClient
+    OPENPIPE_AVAILABLE = True
+except ImportError:
+    OPENPIPE_AVAILABLE = False
+    OpenPipeClient = None
+
 # ── Reproduzierbarkeit ──────────────────────────────────────────────
 torch.manual_seed(42)
 np.random.seed(42)
@@ -59,6 +67,15 @@ if WANDB_AVAILABLE:
         tags=["dqn", "gridworld", "pytorch"]
     )
     print(f"📊 W&B initialisiert (mode={mode})")
+
+# ── OpenPipe Logger ──────────────────────────────────────────────────
+op_logger = None
+if OPENPIPE_AVAILABLE:
+    from rl_agent import OpenPipeLogger
+    op_logger = OpenPipeLogger()
+    print("🔧 OpenPipe Logger initialisiert")
+else:
+    print("⚠️  OpenPipe nicht installiert — überspringe Tracking")
 
 # ── Hyperparameter ──────────────────────────────────────────────────
 EPISODES = 500
@@ -249,6 +266,17 @@ for episode in range(1, EPISODES + 1):
             "steps": steps,
         })
 
+    # ── OpenPipe Logging ─────────────────────────────────────
+    if op_logger and episode % 50 == 0:
+        op_logger.log_episode({
+            "episode": episode,
+            "algorithm": "dqn-gridworld",
+            "reward": episode_reward,
+            "avg_reward_100": ma,
+            "epsilon": agent.epsilon,
+            "steps": steps,
+        })
+
 # ── Evaluation ──────────────────────────────────────────────────────
 print("\n── Evaluation ──")
 eval_rewards = []
@@ -341,6 +369,10 @@ plt.show()
 
 print(f"\nPlots & Modell gespeichert unter: {output_dir}/")
 print("06_rl_gridworld.py – Fertig!")
+
+# ── OpenPipe Export ──────────────────────────────────────────────────
+if op_logger and len(op_logger.get_training_data()) > 0:
+    op_logger.export_jsonl("output/06_gridworld_training_data.jsonl")
 
 # ── W&B Cleanup ─────────────────────────────────────────────────────
 if WANDB_AVAILABLE:
