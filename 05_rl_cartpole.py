@@ -50,7 +50,7 @@ print(f"Verwende Gerät: {DEVICE}")
 if WANDB_AVAILABLE:
     mode = "online" if os.environ.get("WANDB_API_KEY") else "offline"
     wandb.init(
-        project="pytorch-learning",
+        project="learn-pytorch",
         name="dqn-cartpole",
         config={
             "algorithm": "DQN",
