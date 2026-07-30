@@ -4,8 +4,8 @@ PyTorch von Grund auf — Tensor-Basics
 Das Fundament: Tensoren, Operationen, GPU, Autograd.
 """
 
-import torch
 import numpy as np
+import torch
 
 
 def tensor_basics():
@@ -156,7 +156,7 @@ def linear_regression_torch():
                   f"w={w.item():.3f}, b={b.item():.3f}")
 
     print(f"\n✅ Gefunden: w={w.item():.3f}, b={b.item():.3f}")
-    print(f"   Erwartet:  w=3.0, b=2.0")
+    print("   Erwartet:  w=3.0, b=2.0")
 
 
 if __name__ == "__main__":

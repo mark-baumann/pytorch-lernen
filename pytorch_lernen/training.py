@@ -1,7 +1,7 @@
 """Gemeinsame Trainings-Utilities."""
 
 import torch
-import torch.nn as nn
+from torch import nn
 from torch.utils.data import DataLoader
 
 

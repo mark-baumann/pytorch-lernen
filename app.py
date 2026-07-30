@@ -4,13 +4,13 @@ Streamlit-App: PyTorch Lernen — Interaktive Visualisierung
 Tensor-Grundlagen, Autograd, CNN-Demo, Transfer-Learning, DQN-CartPole.
 """
 
+from pathlib import Path
+
+import numpy as np
 import streamlit as st
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
-import matplotlib.pyplot as plt
-from pathlib import Path
+from torch import nn
 
 st.set_page_config(page_title="PyTorch Lernen", page_icon="🔥", layout="wide")
 st.title("🔥 PyTorch von Grund auf lernen")

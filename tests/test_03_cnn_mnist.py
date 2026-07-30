@@ -1,10 +1,11 @@
 """Tests für 03_cnn_mnist.py — CNN mit BatchNorm."""
 
 import torch
-import torch.nn as nn
+from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
+
 from pytorch_lernen.models import MNIST_CNN
-from pytorch_lernen.training import train_epoch, evaluate
+from pytorch_lernen.training import train_epoch
 
 
 class TestMNISTCNN:

@@ -10,12 +10,10 @@ Vollständiges Training mit:
 """
 
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import DataLoader, TensorDataset
+from torch import nn
+from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-import numpy as np
-
 
 # ═══════════════════════════════════════════════════════════════
 # 1. Einfaches MLP

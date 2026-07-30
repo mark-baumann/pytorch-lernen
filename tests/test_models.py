@@ -1,9 +1,8 @@
 """Tests für pytorch_lernen.models."""
 
 import torch
-from pytorch_lernen.models import (
-    SimpleMLP, SimpleCNN, MNIST_CNN, count_parameters
-)
+
+from pytorch_lernen.models import MNIST_CNN, SimpleCNN, SimpleMLP, count_parameters
 
 
 class TestSimpleMLP:

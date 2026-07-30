@@ -1,7 +1,7 @@
 """Tests für 01_tensor_basics.py — Tensor-Operationen und Autograd."""
 
-import torch
 import numpy as np
+import torch
 
 
 class TestTensorBasics:

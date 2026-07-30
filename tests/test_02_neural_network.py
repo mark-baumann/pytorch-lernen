@@ -1,10 +1,11 @@
 """Tests für 02_neural_network.py — MLP & CNN auf MNIST."""
 
 import torch
-import torch.nn as nn
+from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
-from pytorch_lernen.models import SimpleMLP, SimpleCNN, count_parameters
-from pytorch_lernen.training import train_epoch, evaluate
+
+from pytorch_lernen.models import SimpleCNN, SimpleMLP, count_parameters
+from pytorch_lernen.training import train_epoch
 
 
 class TestSimpleMLP:

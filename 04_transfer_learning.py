@@ -11,14 +11,14 @@ Evaluation: Accuracy auf Test-Set
 Visualisierung: Loss/Accuracy-Kurven, Beispiel-Vorhersagen mit Klassen-Namen
 """
 
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader
-from torchvision import datasets, transforms, models
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
-from pathlib import Path
+import torch
+from torch import nn, optim
+from torch.utils.data import DataLoader
+from torchvision import datasets, models, transforms
 
 # ── Reproduzierbarkeit ──────────────────────────────────────────────────────
 torch.manual_seed(42)
@@ -69,6 +69,7 @@ test_dataset = datasets.CIFAR10(
 
 # Für CPU-Training: Subset verwenden (5000 Train, 1000 Test)
 from torch.utils.data import Subset
+
 train_indices = list(range(5000))
 test_indices = list(range(1000))
 train_dataset = Subset(train_dataset, train_indices)
@@ -95,7 +96,7 @@ num_features = model.fc.in_features
 model.fc = nn.Linear(num_features, 10)
 
 model = model.to(DEVICE)
-print(f"\nModell: ResNet18 (pretrained)")
+print("\nModell: ResNet18 (pretrained)")
 print(f"Trainierbare Parameter: {sum(p.requires_grad for p in model.parameters()):,}")
 
 # ── Loss ────────────────────────────────────────────────────────────────────

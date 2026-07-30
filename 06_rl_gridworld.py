@@ -10,15 +10,15 @@ Training:    Experience Replay, Target Network, Epsilon-Greedy
 W&B:         Experiment-Tracking mit Weights & Biases
 """
 
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import numpy as np
-import sys
 import os
-from collections import deque
 import random
+import sys
+from collections import deque
 from pathlib import Path
+
+import numpy as np
+import torch
+from torch import nn, optim
 
 # ── GridWorld aus agent-reinforcement-learning importieren ──────────
 sys.path.insert(0, "/opt/data/agent-reinforcement-learning")

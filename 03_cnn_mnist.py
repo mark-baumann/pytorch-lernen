@@ -10,15 +10,15 @@ Evaluation: Accuracy auf Test-Set
 Visualisierung: Loss-Kurve, Accuracy-Kurve, Beispiel-Vorhersagen
 """
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
-from pathlib import Path
+import torch
+import torch.nn.functional as F
+from torch import nn, optim
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
 
 # ── Reproduzierbarkeit ──────────────────────────────────────────────────────
 torch.manual_seed(42)

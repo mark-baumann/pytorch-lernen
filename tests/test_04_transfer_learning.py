@@ -1,7 +1,7 @@
 """Tests für 04_transfer_learning.py — ResNet18 Fine-Tuning."""
 
 import torch
-import torch.nn as nn
+from torch import nn
 from torchvision import models
 
 

@@ -1,8 +1,8 @@
 """Gemeinsame Modell-Architekturen."""
 
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
+from torch import nn
 
 
 class SimpleMLP(nn.Module):

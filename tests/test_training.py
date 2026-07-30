@@ -1,10 +1,11 @@
 """Tests für pytorch_lernen.training."""
 
 import torch
-import torch.nn as nn
+from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
-from pytorch_lernen.training import train_epoch, evaluate
+
 from pytorch_lernen.models import SimpleMLP
+from pytorch_lernen.training import evaluate, train_epoch
 
 
 class TestTrainEpoch:

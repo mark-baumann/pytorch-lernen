@@ -11,16 +11,16 @@ Visualisierung: Reward-Kurve, Epsilon-Decay, Beispiel-Trajektorie
 W&B Tracking:  Experiment-Tracking mit Weights & Biases
 """
 
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import numpy as np
-import matplotlib.pyplot as plt
-from collections import deque
-import random
 import os
+import random
 import sys
+from collections import deque
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+from torch import nn, optim
 
 # ── W&B (optional) ──────────────────────────────────────────────────────────
 try:
@@ -104,7 +104,7 @@ env = gym.make("CartPole-v1")
 STATE_DIM = env.observation_space.shape[0]   # 4
 ACTION_DIM = env.action_space.n              # 2
 
-print(f"Environment: CartPole-v1")
+print("Environment: CartPole-v1")
 print(f"State-Dimension: {STATE_DIM}, Action-Dimension: {ACTION_DIM}")
 
 
